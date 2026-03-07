@@ -43,3 +43,5 @@ See `references/cli-scaffold.md` for the project template, stack, and implementa
 Select the appropriate code template from `references/tier-1-templates.md` or `references/tier-2-templates.md` based on the pattern classification from `mcp-analyze`.
 
 If the pattern is Tier 3, see `references/tier-3-strategies.md` for partial conversion approach.
+
+If the source MCP server is Python, see `references/porting-cheatsheet.md` for Python → TypeScript translation patterns (httpx → fetch, pydantic → interfaces, asyncio → ESM await, etc.).

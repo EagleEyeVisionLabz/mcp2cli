@@ -5,8 +5,7 @@ This is a Claude Code plugin that converts MCP servers into token-efficient CLI 
 ## Skills
 
 - `mcp-analyze` - Analyze MCP server source, classify pattern, assess feasibility
-- `mcp-codegen` - Generate TypeScript CLI code from analysis
-- `mcp-port` - Port Python API logic to TypeScript
+- `mcp-codegen` - Generate TypeScript CLI code from analysis (includes Python → TS porting)
 - `skill-author` - Generate SKILL.md for CLI tools
 
 ## Commands

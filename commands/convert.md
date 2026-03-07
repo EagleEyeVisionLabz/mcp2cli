@@ -27,7 +27,7 @@ When the user runs `/convert`, execute these phases in order:
 **Phase 2 — Generate CLI** (uses `mcp-codegen` skill)
 1. Design the CLI command structure based on the analysis
 2. Generate TypeScript CLI code using the appropriate tier template
-3. If the source is Python, use `mcp-port` skill to translate the API logic
+3. If the source is Python, refer to `mcp-codegen`'s `references/porting-cheatsheet.md` for translation patterns
 
 **Phase 3 — Generate SKILL.md** (uses `skill-author` skill)
 1. Generate a SKILL.md for the new CLI tool

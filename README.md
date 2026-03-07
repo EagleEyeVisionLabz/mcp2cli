@@ -114,14 +114,10 @@ mcp2cli/
 │   │   ├── SKILL.md
 │   │   └── references/
 │   │       ├── cli-scaffold.md
+│   │       ├── porting-cheatsheet.md
 │   │       ├── tier-1-templates.md
 │   │       ├── tier-2-templates.md
 │   │       └── tier-3-strategies.md
-│   │
-│   ├── mcp-port/                       # Python → TypeScript porting
-│   │   ├── SKILL.md
-│   │   └── references/
-│   │       └── porting-cheatsheet.md
 │   │
 │   └── skill-author/                   # SKILL.md generation
 │       ├── SKILL.md
@@ -139,7 +135,7 @@ mcp2cli/
 
 | Component | Count | Purpose |
 |:----------|:-----:|:--------|
-| Skills | 4 | `mcp-analyze`, `mcp-codegen`, `mcp-port`, `skill-author` |
+| Skills | 3 | `mcp-analyze`, `mcp-codegen`, `skill-author` |
 | Commands | 3 | `/convert` (orchestrator), `/analyze-mcp`, `/generate-skill` |
 | Agents | 1 | MCP server source code analysis |
 

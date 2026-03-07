@@ -1,20 +1,8 @@
-<p align="center">
-  <br />
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/mcp2cli-F7F7F7?style=for-the-badge&labelColor=000&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmN2Y3ZjciIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTkgM0g1YTIgMiAwIDAgMC0yIDJ2NGEyIDIgMCAwIDAgMiAyaDRhMiAyIDAgMCAwIDItMlY1YTIgMiAwIDAgMC0yLTJ6Ii8+PHBhdGggZD0iTTMgMTNoMTgiLz48cGF0aCBkPSJNMyAxN2gxOCIvPjxwYXRoIGQ9Ik0zIDIxaDE4Ii8+PHBhdGggZD0iTTE1IDNIN3YxOCIvPjwvc3ZnPg==&logoColor=F7F7F7" />
-    <img src="https://img.shields.io/badge/mcp2cli-000?style=for-the-badge" alt="mcp2cli" />
-  </picture>
-  <br />
-  <strong>MCP servers are expensive. CLIs are not.</strong>
-  <br />
-  <sub>A Claude Code plugin that converts MCP servers into token-efficient CLI tools.</sub>
-  <br />
-  <br />
-  <a href="#-quick-start"><img src="https://img.shields.io/badge/Quick_Start-blue?style=flat-square" alt="Quick Start" /></a>
-  <a href="#-how-it-works"><img src="https://img.shields.io/badge/How_It_Works-blue?style=flat-square" alt="How It Works" /></a>
-  <a href="#-commands"><img src="https://img.shields.io/badge/Commands-blue?style=flat-square" alt="Commands" /></a>
-  <a href="https://github.com/mason/mcp2cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License: MIT" /></a>
-</p>
+# mcp2cli
+
+**MCP servers are expensive. CLIs are not.**
+
+> A Claude Code plugin that converts MCP servers into token-efficient CLI tools.
 
 ---
 

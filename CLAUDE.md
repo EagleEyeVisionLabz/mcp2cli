@@ -6,7 +6,7 @@ This is a Claude Code plugin that helps convert MCP servers into token-efficient
 
 - `.claude-plugin/plugin.json` - Plugin manifest
 - `skills/mcp2cli/SKILL.md` - Core conversion skill (auto-invoked)
-- `skills/mcp2cli/references/` - Detailed patterns and templates
+- `skills/mcp2cli/references/` - Pattern classification, code templates, porting guide
 - `commands/` - Slash commands (`/convert`, `/analyze-mcp`, `/generate-skill`)
 - `agents/mcp-analyzer.md` - Subagent for MCP server analysis
 

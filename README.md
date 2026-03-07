@@ -33,19 +33,19 @@ A CLI tool with a SKILL.md loads **on-demand** — only when relevant — and re
 
 ## Quick Start
 
-**Install the plugin:**
+**1. Clone the plugin:**
 
 ```bash
-/plugin install mcp2cli
+git clone https://github.com/myeolinmalchi/mcp2cli.git
 ```
 
-**Or load locally for development:**
+**2. Load it in Claude Code:**
 
 ```bash
-claude --plugin-dir ./path/to/mcp2cli
+claude --plugin-dir ./mcp2cli
 ```
 
-**Convert your first MCP server:**
+**3. Convert your first MCP server:**
 
 ```
 /convert ./my-mcp-server

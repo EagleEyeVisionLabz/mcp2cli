@@ -1,0 +1,18 @@
+{
+  "name": "mcp2cli",
+  "version": "0.1.0",
+  "description": "Convert MCP servers to token-efficient CLI tools with auto-generated SKILL.md files for Claude Code agents",
+  "author": {
+    "name": "mason"
+  },
+  "keywords": [
+    "mcp",
+    "cli",
+    "migration",
+    "skill",
+    "token-efficiency",
+    "agent-tools"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/mason/mcp2cli"
+}

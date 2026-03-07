@@ -15,13 +15,12 @@ Analyze an MCP server's tools, resources, and prompts to assess CLI conversion f
 
 ## Instructions
 
-When the user runs `/analyze-mcp`:
+When the user runs `/analyze-mcp`, use the `mcp-analyze` skill to:
 
 1. Read the MCP server source code at the given path
 2. Extract all tool definitions with their parameters and output formats
-3. Identify the server type: proxy (remote API relay), SDK wrapper, or standalone
-4. Assess conversion feasibility using the mcp2cli skill's decision guide
-5. Output a structured analysis table showing:
+3. Classify the server pattern and determine its tier (1-4)
+4. Output a structured analysis table showing:
    - Each tool's name, parameters, output format
    - Recommended CLI command mapping
    - Conversion complexity (low/medium/high)

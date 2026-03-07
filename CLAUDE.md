@@ -1,19 +1,18 @@
 # mcp2cli - MCP to CLI Conversion Plugin
 
-This is a Claude Code plugin that helps convert MCP servers into token-efficient CLI tools.
+This is a Claude Code plugin that converts MCP servers into token-efficient CLI tools.
 
-## Plugin Structure
+## Skills
 
-- `.claude-plugin/plugin.json` - Plugin manifest
-- `skills/mcp2cli/SKILL.md` - Core conversion skill (auto-invoked)
-- `skills/mcp2cli/references/` - Pattern classification, code templates, porting guide
-- `commands/` - Slash commands (`/convert`, `/analyze-mcp`, `/generate-skill`)
-- `agents/mcp-analyzer.md` - Subagent for MCP server analysis
+- `mcp-analyze` - Analyze MCP server source, classify pattern, assess feasibility
+- `mcp-codegen` - Generate TypeScript CLI code from analysis
+- `mcp-port` - Port Python API logic to TypeScript
+- `skill-author` - Generate SKILL.md for CLI tools
 
-## Key Commands
+## Commands
 
-- `/convert <path>` - Full MCP→CLI conversion workflow
-- `/analyze-mcp <path>` - Analyze without converting
+- `/convert <path>` - Full conversion (orchestrates all skills)
+- `/analyze-mcp <path>` - Analysis only
 - `/generate-skill <cli-name>` - Generate SKILL.md for existing CLI
 
 ## Development

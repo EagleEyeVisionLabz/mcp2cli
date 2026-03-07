@@ -102,34 +102,45 @@ The plugin classifies MCP servers into 4 tiers by CLI conversion feasibility:
 ```
 mcp2cli/
 ├── .claude-plugin/
-│   └── plugin.json                        # Plugin manifest
+│   └── plugin.json
 │
 ├── skills/
-│   └── mcp2cli/
-│       ├── SKILL.md                       # Core conversion skill (auto-invoked)
+│   ├── mcp-analyze/                    # MCP server analysis & pattern classification
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── pattern-classification.md
+│   │
+│   ├── mcp-codegen/                    # TypeScript CLI code generation
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── cli-scaffold.md
+│   │       ├── tier-1-templates.md
+│   │       ├── tier-2-templates.md
+│   │       └── tier-3-strategies.md
+│   │
+│   ├── mcp-port/                       # Python → TypeScript porting
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── porting-cheatsheet.md
+│   │
+│   └── skill-author/                   # SKILL.md generation
+│       ├── SKILL.md
 │       └── references/
-│           ├── pattern-classification.md  # 15 MCP patterns across 4 tiers
-│           ├── cli-scaffold.md            # TypeScript CLI project template
-│           ├── tier-1-templates.md        # Code templates: system, API, doc/media
-│           ├── tier-2-templates.md        # Code templates: DB, proxy, multi-tool
-│           ├── tier-3-strategies.md       # Partial conversion strategies
-│           ├── porting-cheatsheet.md      # Python → TypeScript translation guide
-│           └── skill-template.md          # SKILL.md generation template
+│           └── skill-template.md
 │
 ├── commands/
-│   ├── convert.md                         # /convert — full conversion
-│   ├── analyze-mcp.md                     # /analyze-mcp — analysis only
-│   └── generate-skill.md                  # /generate-skill — SKILL.md for existing CLI
+│   ├── convert.md                      # /convert — orchestrates all skills
+│   ├── analyze-mcp.md                  # /analyze-mcp — analysis only
+│   └── generate-skill.md              # /generate-skill — SKILL.md for existing CLI
 │
 └── agents/
-    └── mcp-analyzer.md                    # Subagent for MCP source analysis
+    └── mcp-analyzer.md                 # Subagent for MCP source analysis
 ```
 
 | Component | Count | Purpose |
 |:----------|:-----:|:--------|
-| Skills | 1 | Auto-invoked conversion engine |
-| Reference docs | 7 | Pattern classification, code templates, porting guide |
-| Commands | 3 | `/convert`, `/analyze-mcp`, `/generate-skill` |
+| Skills | 4 | `mcp-analyze`, `mcp-codegen`, `mcp-port`, `skill-author` |
+| Commands | 3 | `/convert` (orchestrator), `/analyze-mcp`, `/generate-skill` |
 | Agents | 1 | MCP server source code analysis |
 
 ---
@@ -149,7 +160,7 @@ mcp2cli/
 
 ## Contributing
 
-1. **Add patterns** — New conversion patterns go in `skills/mcp2cli/references/`
+1. **Add patterns** — New conversion patterns go in `skills/mcp-codegen/references/`
 2. **Keep it lean** — SKILL.md stays under 500 lines. Detailed docs go in `references/`
 3. **Test conversions** — Point `/convert` at any MCP server and verify the output works
 

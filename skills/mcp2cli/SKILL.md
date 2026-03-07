@@ -65,40 +65,42 @@ Map MCP tools to CLI commands following these rules:
 
 ### Phase 3: Generate CLI Tool Code
 
-Choose the implementation language based on the source MCP server:
+**Always generate TypeScript/npm-based CLI tools**, regardless of the source MCP server's language. The source language doesn't matter — MCP servers are API wrappers, and the CLI just needs to call the same APIs.
 
-**TypeScript/Node MCP → TypeScript CLI:**
-- Use `commander` or `yargs` for argument parsing
-- Reuse the MCP server's API client code directly
-- Entry point: `#!/usr/bin/env node` with `bin` field in package.json
-- Build with `tsup` for single-file distribution
+Benefits of npm-based CLI:
+- `npx <cli-name>` — run without global install
+- `bin` field in package.json — clean global install via `npm i -g`
+- `tsup` — bundle to a single file, no dependency issues
+- Cross-platform without Python version conflicts
 
-**Python MCP → Python CLI:**
-- Use `click` or `typer` for argument parsing
-- Reuse the MCP server's API client, validators, utilities
-- Entry point: `[project.scripts]` in pyproject.toml
-- Replace `async` MCP context calls with `asyncio.run()` wrappers
+**Stack:**
+- `commander` for argument parsing
+- `node-fetch` or built-in `fetch` for HTTP calls
+- `tsup` for bundling to single ESM file
+- Entry point: `#!/usr/bin/env node`
 
-**Proxy MCP (remote API relay):**
-- Create a thin HTTP client CLI that calls the remote API directly
-- Skip the MCP protocol layer entirely
-- Add local caching where appropriate
+**Porting API logic from Python MCP servers:**
+- Translate `httpx` calls → `fetch`
+- Translate `aiofiles` → `fs/promises`
+- Translate `tenacity` retry → simple retry loop or `p-retry`
+- Translate `click.progressbar` → `ora` or stderr logging
+- Translate validators/constants as-is (logic is language-agnostic)
 
 **Code Structure Template:**
 ```
 <cli-name>/
 ├── src/
-│   ├── cli.ts (or cli.py)      # Entry point + command definitions
+│   ├── cli.ts                   # Entry point + command definitions
 │   ├── commands/                # One file per command group
 │   │   ├── <group1>.ts
 │   │   └── <group2>.ts
-│   ├── api/                     # API client (reused from MCP)
-│   │   └── client.ts
-│   └── utils/                   # Shared utilities
-│       ├── output.ts            # Output formatting
-│       └── config.ts            # Config file loading
-├── package.json (or pyproject.toml)
-├── tsconfig.json (if TS)
+│   ├── api/
+│   │   └── client.ts            # HTTP client (ported from MCP)
+│   └── utils/
+│       ├── output.ts            # Output formatting (JSON/text)
+│       └── config.ts            # Config & env var loading
+├── package.json                 # bin field + dependencies
+├── tsconfig.json
 └── README.md
 ```
 

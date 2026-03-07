@@ -50,51 +50,56 @@ program
 program.parse();
 ```
 
-### 2. FastMCP Python → Click/Typer CLI
+### 2. FastMCP Python → TypeScript CLI
 
 **Signature**: Python server using `@mcp.tool()` decorators with FastMCP.
 
-**Example**: mcp-upstage
-- MCP: `@mcp.tool() async def parse_document(file_path, ctx)`
-- CLI: `@click.command() def parse_document(file_path)`
-
 **Conversion Steps**:
 1. List all `@mcp.tool()` decorated functions
-2. Convert each to a click/typer command
-3. Replace `ctx.report_progress()` with `click.progressbar()` or `rich.progress`
-4. Replace `ctx.info/warn/error()` with `click.echo()` to stderr
-5. Wrap async functions with `asyncio.run()`
-6. Keep all validation, API client, and utility modules unchanged
+2. Create a `commander` command for each tool
+3. Port `httpx` calls → `fetch`
+4. Port `aiofiles` → `fs/promises`
+5. Port `tenacity` retry → simple retry loop or `p-retry`
+6. Port validators/constants as-is (logic is language-agnostic)
+7. Replace `ctx.report_progress()` with stderr logging or `ora` spinner
 
-**Code Template (Python)**:
-```python
-#!/usr/bin/env python3
-import click
-import asyncio
-from .api.client import call_api
-from .utils.validators import validate_file
+**Code Template (TypeScript)**:
+```typescript
+#!/usr/bin/env node
+import { Command } from 'commander';
+import { readFile } from 'fs/promises';
 
-@click.group()
-@click.version_option()
-def cli():
-    """CLI tool description."""
-    pass
+const program = new Command()
+  .name('upstage-cli')
+  .version('1.0.0');
 
-@cli.command()
-@click.argument('file_path', type=click.Path(exists=True))
-@click.option('--output-format', '-f', multiple=True, help='Output formats')
-@click.option('--json', 'as_json', is_flag=True, help='JSON output')
-def parse(file_path, output_format, as_json):
-    """Parse a document and extract structured content."""
-    validate_file(file_path)
-    result = asyncio.run(call_api(file_path, list(output_format)))
-    if as_json:
-        click.echo(json.dumps(result, indent=2))
-    else:
-        click.echo(format_result(result))
+program
+  .command('parse <file>')
+  .option('-f, --output-format <formats...>', 'Output formats')
+  .option('--json', 'JSON output')
+  .action(async (file, opts) => {
+    const apiKey = process.env.UPSTAGE_API_KEY;
+    if (!apiKey) { console.error('Set UPSTAGE_API_KEY'); process.exit(1); }
 
-if __name__ == '__main__':
-    cli()
+    const body = new FormData();
+    body.append('document', new Blob([await readFile(file)]));
+    body.append('model', 'document-parse');
+
+    const res = await fetch('https://api.upstage.ai/v1/document-digitization', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}` },
+      body,
+    });
+    const data = await res.json();
+
+    if (opts.json) {
+      console.log(JSON.stringify(data, null, 2));
+    } else {
+      console.log(data.content?.text ?? JSON.stringify(data, null, 2));
+    }
+  });
+
+program.parse();
 ```
 
 ### 3. Multi-Tool MCP → Grouped Subcommand CLI

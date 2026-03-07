@@ -10,7 +10,7 @@ You are an expert at converting MCP (Model Context Protocol) servers into token-
 ## Why Convert MCP to CLI?
 
 - **Token efficiency**: MCP loads all tool schemas upfront (tens of thousands of tokens). CLI + SKILL.md loads on-demand, saving 33-99% tokens.
-- **Simpler integration**: No server process needed. Just `npm install -g` or `pip install` + SKILL.md.
+- **Simpler integration**: No server process needed. Just `npm install -g` + SKILL.md.
 - **Compact output**: CLI returns plain text vs MCP's verbose JSON with metadata.
 
 ## Conversion Process
@@ -179,47 +179,63 @@ description: <What the tool does and when to use it. Include trigger keywords. W
    - pip: Set `[project.scripts]`, publish to PyPI
    - Or distribute as a Claude Code plugin with the CLI bundled
 
-## Reference: Patterns from Real Conversions
+## MCP Server Pattern Classification
 
-### Pattern A: Proxy MCP → Direct API CLI (opgg-mcp style)
+Before converting, classify the MCP server into one of these patterns. Each has different conversion strategies.
 
-The MCP server is just a protocol translator. The CLI should call the API directly:
+### Tier 1: Excellent CLI Fit
 
-```
-MCP: Client → MCP Server (stdio) → MCP Client → Remote API (HTTP/SSE)
-CLI: Client → CLI → Remote API (HTTP)  [one fewer hop]
-```
+| Pattern | What it wraps | Conversion strategy |
+|:--------|:-------------|:-------------------|
+| **Local System Tool** | Filesystem, git, docker, shell | 1:1 tool-to-subcommand mapping. No auth. Use `child_process` or `fs` directly. |
+| **SaaS API Wrapper** | REST/GraphQL APIs (GitHub, Slack, etc.) | HTTP client CLI. Auth via env vars. Map CRUD operations to subcommands. |
+| **Infrastructure/DevOps** | Cloud APIs, K8s, CI/CD | Often wraps existing CLIs — consider thin wrapper or SKILL.md pointing to original CLI. |
+| **Document/Media Processing** | OCR, PDF, image gen | File-in/file-out pattern. `<cli> process <input-file> --output <output-file>`. |
 
-### Pattern B: SDK MCP → CLI Wrapper (mcp-upstage style)
+### Tier 2: Good CLI Fit
 
-The MCP server wraps an SDK with validation and file handling. Reuse all business logic:
+| Pattern | What it wraps | Conversion strategy |
+|:--------|:-------------|:-------------------|
+| **Database Query** | SQLite, Postgres, Redis | Connection string via env var. `<cli> query "SQL"`, `<cli> schema`. Format output as table or JSON. |
+| **Search & Retrieval** | Web search, vector DBs | `<cli> search "query" --limit 10`. Simple for search; index management needs subcommands. |
+| **Monitoring/Observability** | Metrics, logs, APM | `<cli> query "metric > threshold"`, `<cli> logs tail`. Streaming → `--follow` flag. |
+| **Communication/Messaging** | Slack, email, Discord | `<cli> send "#channel" "message"`, `<cli> read --channel`. |
+| **Proxy MCP** | Remote MCP/API endpoint | Remove protocol layer, call API directly. One fewer hop. |
+| **Multi-tool MCP** | 10+ tools with prefixes | Group by prefix: `lol_get_profile` → `<cli> lol profile`. |
 
-```
-MCP: @mcp.tool() decorator → validation → API call → save output
-CLI: @click.command() decorator → validation → API call → save output
-```
+### Tier 3: Partial/Difficult CLI Fit
 
-Only the interface layer changes. The core logic is identical.
+| Pattern | What it wraps | Strategy |
+|:--------|:-------------|:---------|
+| **Browser Automation** | Playwright, Puppeteer | Individual actions work (`click`, `screenshot`), but session state is awkward. Consider script-based approach. |
+| **Code Execution/Sandbox** | Language runtimes | One-shot `<cli> exec "code"` works. REPL sessions need persistent process. |
+| **Knowledge/Memory** | Knowledge graphs, memory stores | `store`/`recall` subcommands work, but loses value without LLM loop. |
+| **Auth & Identity** | OAuth, identity platforms | OAuth browser redirect flow needs loopback server (like `gh auth login`). API key auth is trivial. |
 
-### Pattern C: Complex Multi-Tool MCP → Grouped CLI
+### Tier 4: Not Recommended for CLI
 
-For MCP servers with many tools (10+), group by domain:
+| Pattern | Why |
+|:--------|:----|
+| **Aggregator/Gateway** | Infrastructure for MCP ecosystems, not end-user tools. |
+| **Reasoning/Cognitive** | Structures LLM's own reasoning. No CLI value without AI loop. |
 
-```
-MCP: lol_get_profile, lol_get_matches, tft_meta_decks, val_agents
-CLI: mycli lol profile, mycli lol matches, mycli tft meta, mycli val agents
-```
+## Decision Guide
 
-## Decision Guide: When NOT to Convert
+**Convert to CLI when:**
+- Tools are stateless request/response (Tier 1 & 2)
+- Output is text or JSON
+- The MCP server wraps an API, filesystem, or database
+- Schema overhead > actual usage value
 
-Keep MCP when:
-- The server provides **real-time streaming** that CLI can't replicate
-- Tools require **bidirectional communication** (subscriptions, live updates)
-- The ecosystem has **no existing CLI** and the API is too complex for shell commands
-- The server manages **persistent state** across tool calls
+**Keep as MCP when:**
+- Server maintains session state critical to functionality (browser sessions, REPL)
+- Real-time streaming / bidirectional communication is core
+- Server aggregates or routes to other MCP servers
+- Server structures LLM reasoning (no standalone CLI value)
 
-Convert to CLI when:
-- Tools are **stateless request/response** patterns
-- Output is **text or JSON** (not binary streams)
-- The agent uses tools **infrequently** (MCP schema overhead > usage value)
-- You want **simpler deployment** without background server processes
+**Partial conversion** (Tier 3):
+- Extract stateless read operations as CLI
+- Keep stateful/interactive operations in MCP
+- Example: Browser automation → `screenshot` and `snapshot` as CLI, keep `navigate`+`click` chains in MCP
+
+See `references/patterns.md` for code templates for each pattern.

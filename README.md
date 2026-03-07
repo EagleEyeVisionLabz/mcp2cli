@@ -80,88 +80,18 @@ graph LR
 | 4 | **Skill** | Generate a SKILL.md under 500 lines with examples for every command | SKILL.md file |
 | 5 | **Validate** | Run each CLI command, compare with original MCP output, verify SKILL.md accuracy | Test report |
 
-### Conversion Patterns
+### Supported MCP Patterns
 
-The plugin recognizes and handles 4 common MCP architectures:
+The plugin classifies MCP servers into 4 tiers by CLI conversion feasibility:
 
-| Pattern | Description | Complexity |
-|:--------|:------------|:----------:|
-| **Proxy** | Relays requests to a remote API via MCP protocol | Low |
-| **SDK Wrapper** | Wraps an external API with validation & file handling | Medium |
-| **Multi-tool** | 10+ tools organized by domain prefixes | Medium |
-| **Stateful** | Maintains session state or uses subscriptions | High |
+| Tier | Patterns | CLI Fit |
+|:----:|:---------|:-------:|
+| 1 | Local System Tool, SaaS API Wrapper, DevOps, Document/Media Processing | Excellent |
+| 2 | Database, Search, Proxy, Multi-tool, Messaging, Monitoring | Good |
+| 3 | Browser Automation, Code Execution, Memory, Auth/Identity | Partial |
+| 4 | Aggregator/Gateway, Reasoning/Cognitive | Not recommended |
 
-<details>
-<summary><b>How each pattern maps to CLI</b></summary>
-
-<br />
-
-**Proxy MCP** — Remove the protocol layer entirely, call the API directly:
-
-```mermaid
-graph LR
-  subgraph Before
-    direction LR
-    A1[Agent] --> A2[MCP Server] --> A3[MCP Client] --> A4[Remote API]
-  end
-  subgraph After
-    direction LR
-    B1[Agent] --> B2[CLI] --> B3[Remote API]
-  end
-
-  style Before fill:#2D1117,stroke:#D4622B,color:#F7C59F
-  style After fill:#0D1F12,stroke:#2BD462,color:#A8F0C5
-  style A1 fill:none,stroke:none,color:#F7C59F
-  style A2 fill:none,stroke:none,color:#F7C59F
-  style A3 fill:none,stroke:none,color:#F7C59F
-  style A4 fill:none,stroke:none,color:#F7C59F
-  style B1 fill:none,stroke:none,color:#A8F0C5
-  style B2 fill:none,stroke:none,color:#A8F0C5
-  style B3 fill:none,stroke:none,color:#A8F0C5
-```
-
-**SDK Wrapper** — Keep all business logic, swap only the interface layer:
-
-```mermaid
-graph LR
-  subgraph Before
-    direction LR
-    C1["@mcp.tool()"] --> C2[validate] --> C3[call API] --> C4[format]
-  end
-  subgraph After
-    direction LR
-    D1["@click.command()"] --> D2[validate] --> D3[call API] --> D4[format]
-  end
-
-  style Before fill:#2D1117,stroke:#D4622B,color:#F7C59F
-  style After fill:#0D1F12,stroke:#2BD462,color:#A8F0C5
-  style C1 fill:none,stroke:none,color:#F7C59F
-  style C2 fill:none,stroke:none,color:#F7C59F
-  style C3 fill:none,stroke:none,color:#F7C59F
-  style C4 fill:none,stroke:none,color:#F7C59F
-  style D1 fill:none,stroke:none,color:#A8F0C5
-  style D2 fill:none,stroke:none,color:#A8F0C5
-  style D3 fill:none,stroke:none,color:#A8F0C5
-  style D4 fill:none,stroke:none,color:#A8F0C5
-```
-
-**Multi-tool** — Group by domain prefix into subcommands:
-
-| MCP Tool Name | CLI Command |
-|:---|:---|
-| `lol_get_profile` | `mycli lol profile` |
-| `lol_get_matches` | `mycli lol matches` |
-| `tft_meta_decks` | `mycli tft meta` |
-| `val_list_agents` | `mycli val agents` |
-
-**Stateful** — Partial conversion. Stateless reads become CLI, stateful ops stay MCP:
-
-| Operation | Target |
-|:---|:---|
-| `get_status`, `list_items`, `export_data` | **CLI** |
-| `subscribe_updates`, `maintain_session` | **Keep MCP** |
-
-</details>
+See `skills/mcp2cli/references/patterns.md` for code templates for each pattern.
 
 ---
 
